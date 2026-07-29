@@ -194,3 +194,118 @@ p {
     max-width: 280px;
   }
 }
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.site-header {
+  width: 100%;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  background-color: rgba(255, 255, 255, 0.78);
+
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.navbar {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 64px;
+
+  margin: 0 auto;
+  padding: 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  color: #1d1d1f;
+
+  font-size: 1.1rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  position: relative;
+
+  color: #6e6e73;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #0071e3;
+}
+
+.nav-links a::after {
+  content: "";
+
+  width: 0;
+  height: 2px;
+
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+
+  background-color: #0071e3;
+  border-radius: 999px;
+
+  transition: width 0.2s ease;
+}
+
+.nav-links a.active::after {
+  width: 100%;
+}
+
+
+/* Account for the fixed navigation */
+
+main {
+  padding-top: 64px;
+}
+
+
+/* =========================================================
+   NAVIGATION — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .brand {
+    font-size: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-links a {
+    font-size: 0.82rem;
+  }
+}

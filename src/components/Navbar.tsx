@@ -1,13 +1,21 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  return (
-    <nav>
-      <Link to="/">Home</Link> |{" "}
-      <Link to="/net-worth">Net Worth</Link> |{" "}
-      <Link to="/budget">Budget</Link>
-    </nav>
-  );
+    return (
+        <header className="site-header">
+            <nav className="navbar" aria-label="Primary navigation">
+                <NavLink to="/" className="brand">
+                    Financial Clarity
+                </NavLink>
+
+                <div className="nav-links">
+                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/net-worth">Net Worth</NavLink>
+                    <NavLink to="/budget">Budget</NavLink>
+                </div>
+            </nav>
+        </header>
+    );
 }
 
 export default Navbar;
