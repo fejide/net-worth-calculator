@@ -1,12 +1,21 @@
 import { useState } from "react";
 import AssetForm from "../components/AssetForm";
-import type { Asset } from "../types/finance";
+import LiabilityForm from "../components/LiabilityForm";
+import type { Asset, Liability } from "../types/finance";
 
 function NetWorthPage() {
     const [assets, setAssets] = useState<Asset[]>([]);
+    const [liabilities, setLiabilities] = useState<Liability[]>([]);
 
     function handleAddAsset(asset: Asset) {
         setAssets((currentAssets) => [...currentAssets, asset]);
+    }
+
+    function handleAddLiability(liability: Liability) {
+        setLiabilities((currentLiabilities) => [
+            ...currentLiabilities,
+            liability,
+        ]);
     }
 
     const totalAssets = assets.reduce(
@@ -14,7 +23,12 @@ function NetWorthPage() {
         0
     );
 
-    const currentNetWorth = totalAssets;
+    const totalLiabilities = liabilities.reduce(
+        (total, liability) => total + liability.value,
+        0
+    );
+
+    const currentNetWorth = totalAssets - totalLiabilities;
 
     function formatCurrency(amount: number) {
         return new Intl.NumberFormat("en-US", {
@@ -83,9 +97,40 @@ function NetWorthPage() {
                             loans, vehicle loans, mortgages, and personal loans.
                         </p>
 
-                        <p className="empty-state">
-                            The liabilities form will be added next.
-                        </p>
+                        <LiabilityForm
+                            onAddLiability={handleAddLiability}
+                        />
+
+                        <div className="finance-entry-list">
+                            {liabilities.length === 0 ? (
+                                <p className="empty-state">
+                                    No liabilities have been added yet.
+                                </p>
+                            ) : (
+                                liabilities.map((liability) => (
+                                    <div
+                                        className="finance-entry"
+                                        key={liability.id}
+                                    >
+                                        <div>
+                                            <h3>{liability.name}</h3>
+                                            <p>{liability.category}</p>
+                                        </div>
+
+                                        <strong>
+                                            {formatCurrency(liability.value)}
+                                        </strong>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        <div className="card-total">
+                            <span>Total Liabilities</span>
+                            <strong>
+                                {formatCurrency(totalLiabilities)}
+                            </strong>
+                        </div>
                     </section>
 
                     <section className="calculator-card summary-card">
@@ -96,7 +141,8 @@ function NetWorthPage() {
                         </p>
 
                         <p className="summary-formula">
-                            Total assets minus total liabilities
+                            {formatCurrency(totalAssets)} in assets minus{" "}
+                            {formatCurrency(totalLiabilities)} in liabilities
                         </p>
                     </section>
                 </div>
