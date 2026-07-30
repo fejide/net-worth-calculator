@@ -12,3 +12,19 @@ export interface Asset {
     category: AssetCategory;
     value: number;
 }
+
+export type LiabilityCategory =
+    | "credit-card"
+    | "student-loan"
+    | "vehicle-loan"
+    | "mortgage"
+    | "personal-loan"
+    | "medical-debt"
+    | "other";
+
+export interface Liability {
+    id: string;
+    name: string;
+    category: LiabilityCategory;
+    value: number;
+}
