@@ -18,6 +18,20 @@ function NetWorthPage() {
         ]);
     }
 
+    function handleDeleteAsset(assetId: string) {
+        setAssets((currentAssets) =>
+            currentAssets.filter((asset) => asset.id !== assetId)
+        );
+    }
+
+    function handleDeleteLiability(liabilityId: string) {
+        setLiabilities((currentLiabilities) =>
+            currentLiabilities.filter(
+                (liability) => liability.id !== liabilityId
+            )
+        );
+    }
+
     const totalAssets = assets.reduce(
         (total, asset) => total + asset.value,
         0
@@ -69,15 +83,31 @@ function NetWorthPage() {
                                 </p>
                             ) : (
                                 assets.map((asset) => (
-                                    <div className="finance-entry" key={asset.id}>
+                                    <div
+                                        className="finance-entry"
+                                        key={asset.id}
+                                    >
                                         <div>
                                             <h3>{asset.name}</h3>
                                             <p>{asset.category}</p>
                                         </div>
 
-                                        <strong>
-                                            {formatCurrency(asset.value)}
-                                        </strong>
+                                        <div className="entry-actions">
+                                            <strong>
+                                                {formatCurrency(asset.value)}
+                                            </strong>
+
+                                            <button
+                                                className="delete-entry-button"
+                                                type="button"
+                                                onClick={() =>
+                                                    handleDeleteAsset(asset.id)
+                                                }
+                                                aria-label={`Delete ${asset.name}`}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -117,9 +147,26 @@ function NetWorthPage() {
                                             <p>{liability.category}</p>
                                         </div>
 
-                                        <strong>
-                                            {formatCurrency(liability.value)}
-                                        </strong>
+                                        <div className="entry-actions">
+                                            <strong>
+                                                {formatCurrency(
+                                                    liability.value
+                                                )}
+                                            </strong>
+
+                                            <button
+                                                className="delete-entry-button"
+                                                type="button"
+                                                onClick={() =>
+                                                    handleDeleteLiability(
+                                                        liability.id
+                                                    )
+                                                }
+                                                aria-label={`Delete ${liability.name}`}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 ))
                             )}
