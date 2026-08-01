@@ -5,7 +5,7 @@ function Navbar() {
         <header className="site-header">
             <nav className="navbar" aria-label="Primary navigation">
                 <NavLink to="/" className="brand">
-                    Financial Clarity
+                    Net Worth + Budget Calculator 
                 </NavLink>
 
                 <div className="nav-links">
