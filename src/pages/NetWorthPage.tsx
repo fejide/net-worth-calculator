@@ -41,6 +41,9 @@ function NetWorthPage() {
     const [liabilities, setLiabilities] =
         useState<Liability[]>(loadLiabilities);
 
+    const [editingAsset, setEditingAsset] =
+        useState<Asset | null>(null);
+
     useEffect(() => {
         localStorage.setItem(
             ASSETS_STORAGE_KEY,
@@ -62,6 +65,26 @@ function NetWorthPage() {
         ]);
     }
 
+    function handleUpdateAsset(updatedAsset: Asset) {
+        setAssets((currentAssets) =>
+            currentAssets.map((asset) =>
+                asset.id === updatedAsset.id
+                    ? updatedAsset
+                    : asset
+            )
+        );
+
+        setEditingAsset(null);
+    }
+
+    function handleStartAssetEdit(asset: Asset) {
+        setEditingAsset(asset);
+    }
+
+    function handleCancelAssetEdit() {
+        setEditingAsset(null);
+    }
+
     function handleAddLiability(liability: Liability) {
         setLiabilities((currentLiabilities) => [
             ...currentLiabilities,
@@ -75,6 +98,10 @@ function NetWorthPage() {
                 (asset) => asset.id !== assetId
             )
         );
+
+        if (editingAsset?.id === assetId) {
+            setEditingAsset(null);
+        }
     }
 
     function handleDeleteLiability(
@@ -142,6 +169,11 @@ function NetWorthPage() {
 
                         <AssetForm
                             onAddAsset={handleAddAsset}
+                            onUpdateAsset={handleUpdateAsset}
+                            editingAsset={editingAsset}
+                            onCancelEdit={
+                                handleCancelAssetEdit
+                            }
                         />
 
                         <div className="finance-entry-list">
@@ -172,6 +204,19 @@ function NetWorthPage() {
                                                     asset.value
                                                 )}
                                             </strong>
+
+                                            <button
+                                                className="edit-entry-button"
+                                                type="button"
+                                                onClick={() =>
+                                                    handleStartAssetEdit(
+                                                        asset
+                                                    )
+                                                }
+                                                aria-label={`Edit ${asset.name}`}
+                                            >
+                                                Edit
+                                            </button>
 
                                             <button
                                                 className="delete-entry-button"
