@@ -44,6 +44,9 @@ function NetWorthPage() {
     const [editingAsset, setEditingAsset] =
         useState<Asset | null>(null);
 
+    const [editingLiability, setEditingLiability] =
+        useState<Liability | null>(null);
+
     useEffect(() => {
         localStorage.setItem(
             ASSETS_STORAGE_KEY,
@@ -92,6 +95,30 @@ function NetWorthPage() {
         ]);
     }
 
+    function handleUpdateLiability(
+        updatedLiability: Liability
+    ) {
+        setLiabilities((currentLiabilities) =>
+            currentLiabilities.map((liability) =>
+                liability.id === updatedLiability.id
+                    ? updatedLiability
+                    : liability
+            )
+        );
+
+        setEditingLiability(null);
+    }
+
+    function handleStartLiabilityEdit(
+        liability: Liability
+    ) {
+        setEditingLiability(liability);
+    }
+
+    function handleCancelLiabilityEdit() {
+        setEditingLiability(null);
+    }
+
     function handleDeleteAsset(assetId: string) {
         setAssets((currentAssets) =>
             currentAssets.filter(
@@ -113,6 +140,10 @@ function NetWorthPage() {
                     liability.id !== liabilityId
             )
         );
+
+        if (editingLiability?.id === liabilityId) {
+            setEditingLiability(null);
+        }
     }
 
     const totalAssets = assets.reduce(
@@ -261,6 +292,15 @@ function NetWorthPage() {
                             onAddLiability={
                                 handleAddLiability
                             }
+                            onUpdateLiability={
+                                handleUpdateLiability
+                            }
+                            editingLiability={
+                                editingLiability
+                            }
+                            onCancelEdit={
+                                handleCancelLiabilityEdit
+                            }
                         />
 
                         <div className="finance-entry-list">
@@ -298,6 +338,19 @@ function NetWorthPage() {
                                                         liability.value
                                                     )}
                                                 </strong>
+
+                                                <button
+                                                    className="edit-entry-button"
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleStartLiabilityEdit(
+                                                            liability
+                                                        )
+                                                    }
+                                                    aria-label={`Edit ${liability.name}`}
+                                                >
+                                                    Edit
+                                                </button>
 
                                                 <button
                                                     className="delete-entry-button"
