@@ -1,4 +1,9 @@
-import { useState, type FormEvent } from "react";
+import {
+    useEffect,
+    useState,
+    type FormEvent,
+} from "react";
+
 import type {
     Liability,
     LiabilityCategory,
@@ -6,15 +11,38 @@ import type {
 
 interface LiabilityFormProps {
     onAddLiability: (liability: Liability) => void;
+    onUpdateLiability: (liability: Liability) => void;
+    editingLiability: Liability | null;
+    onCancelEdit: () => void;
 }
 
 function LiabilityForm({
     onAddLiability,
+    onUpdateLiability,
+    editingLiability,
+    onCancelEdit,
 }: LiabilityFormProps) {
     const [name, setName] = useState("");
     const [category, setCategory] =
         useState<LiabilityCategory>("credit-card");
     const [value, setValue] = useState("");
+
+    useEffect(() => {
+        if (editingLiability) {
+            setName(editingLiability.name);
+            setCategory(editingLiability.category);
+            setValue(String(editingLiability.value));
+            return;
+        }
+
+        resetForm();
+    }, [editingLiability]);
+
+    function resetForm() {
+        setName("");
+        setCategory("credit-card");
+        setValue("");
+    }
 
     function handleSubmit(
         event: FormEvent<HTMLFormElement>
@@ -27,6 +55,19 @@ function LiabilityForm({
             return;
         }
 
+        if (editingLiability) {
+            const updatedLiability: Liability = {
+                ...editingLiability,
+                name: name.trim(),
+                category,
+                value: numericValue,
+            };
+
+            onUpdateLiability(updatedLiability);
+            resetForm();
+            return;
+        }
+
         const newLiability: Liability = {
             id: crypto.randomUUID(),
             name: name.trim(),
@@ -35,10 +76,12 @@ function LiabilityForm({
         };
 
         onAddLiability(newLiability);
+        resetForm();
+    }
 
-        setName("");
-        setCategory("credit-card");
-        setValue("");
+    function handleCancel() {
+        resetForm();
+        onCancelEdit();
     }
 
     return (
@@ -80,21 +123,27 @@ function LiabilityForm({
                     <option value="credit-card">
                         Credit Card
                     </option>
+
                     <option value="student-loan">
                         Student Loan
                     </option>
+
                     <option value="vehicle-loan">
                         Vehicle Loan
                     </option>
+
                     <option value="mortgage">
                         Mortgage
                     </option>
+
                     <option value="personal-loan">
                         Personal Loan
                     </option>
+
                     <option value="medical-debt">
                         Medical Debt
                     </option>
+
                     <option value="other">
                         Other
                     </option>
@@ -123,8 +172,20 @@ function LiabilityForm({
                 className="form-submit-button"
                 type="submit"
             >
-                Add Liability
+                {editingLiability
+                    ? "Save Liability Changes"
+                    : "Add Liability"}
             </button>
+
+            {editingLiability && (
+                <button
+                    className="cancel-edit-button"
+                    type="button"
+                    onClick={handleCancel}
+                >
+                    Cancel Edit
+                </button>
+            )}
         </form>
     );
 }
