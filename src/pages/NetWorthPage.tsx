@@ -1,14 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AssetForm from "../components/AssetForm";
 import LiabilityForm from "../components/LiabilityForm";
 import type { Asset, Liability } from "../types/finance";
 
+const ASSETS_STORAGE_KEY = "financial-clarity-assets";
+const LIABILITIES_STORAGE_KEY = "financial-clarity-liabilities";
+
+function loadAssets(): Asset[] {
+    try {
+        const savedAssets = localStorage.getItem(ASSETS_STORAGE_KEY);
+
+        if (!savedAssets) {
+            return [];
+        }
+
+        return JSON.parse(savedAssets) as Asset[];
+    } catch {
+        return [];
+    }
+}
+
+function loadLiabilities(): Liability[] {
+    try {
+        const savedLiabilities = localStorage.getItem(
+            LIABILITIES_STORAGE_KEY
+        );
+
+        if (!savedLiabilities) {
+            return [];
+        }
+
+        return JSON.parse(savedLiabilities) as Liability[];
+    } catch {
+        return [];
+    }
+}
+
 function NetWorthPage() {
-    const [assets, setAssets] = useState<Asset[]>([]);
-    const [liabilities, setLiabilities] = useState<Liability[]>([]);
+    const [assets, setAssets] = useState<Asset[]>(loadAssets);
+    const [liabilities, setLiabilities] =
+        useState<Liability[]>(loadLiabilities);
+
+    useEffect(() => {
+        localStorage.setItem(
+            ASSETS_STORAGE_KEY,
+            JSON.stringify(assets)
+        );
+    }, [assets]);
+
+    useEffect(() => {
+        localStorage.setItem(
+            LIABILITIES_STORAGE_KEY,
+            JSON.stringify(liabilities)
+        );
+    }, [liabilities]);
 
     function handleAddAsset(asset: Asset) {
-        setAssets((currentAssets) => [...currentAssets, asset]);
+        setAssets((currentAssets) => [
+            ...currentAssets,
+            asset,
+        ]);
     }
 
     function handleAddLiability(liability: Liability) {
@@ -20,14 +71,19 @@ function NetWorthPage() {
 
     function handleDeleteAsset(assetId: string) {
         setAssets((currentAssets) =>
-            currentAssets.filter((asset) => asset.id !== assetId)
+            currentAssets.filter(
+                (asset) => asset.id !== assetId
+            )
         );
     }
 
-    function handleDeleteLiability(liabilityId: string) {
+    function handleDeleteLiability(
+        liabilityId: string
+    ) {
         setLiabilities((currentLiabilities) =>
             currentLiabilities.filter(
-                (liability) => liability.id !== liabilityId
+                (liability) =>
+                    liability.id !== liabilityId
             )
         );
     }
@@ -38,11 +94,13 @@ function NetWorthPage() {
     );
 
     const totalLiabilities = liabilities.reduce(
-        (total, liability) => total + liability.value,
+        (total, liability) =>
+            total + liability.value,
         0
     );
 
-    const currentNetWorth = totalAssets - totalLiabilities;
+    const currentNetWorth =
+        totalAssets - totalLiabilities;
 
     function formatCurrency(amount: number) {
         return new Intl.NumberFormat("en-US", {
@@ -55,13 +113,19 @@ function NetWorthPage() {
         <section className="calculator-page">
             <div className="calculator-container">
                 <header className="calculator-header">
-                    <p className="eyebrow">Net Worth Calculator</p>
+                    <p className="eyebrow">
+                        Net Worth Calculator
+                    </p>
 
-                    <h1>See your complete financial position.</h1>
+                    <h1>
+                        See your complete financial position.
+                    </h1>
 
                     <p className="calculator-description">
-                        Add your assets and liabilities to calculate your current
-                        net worth and better understand your overall financial health.
+                        Add your assets and liabilities to
+                        calculate your current net worth and
+                        better understand your overall
+                        financial health.
                     </p>
                 </header>
 
@@ -70,16 +134,21 @@ function NetWorthPage() {
                         <h2>Assets</h2>
 
                         <p>
-                            Record the things you own, including cash, investments,
-                            property, vehicles, and retirement accounts.
+                            Record the things you own,
+                            including cash, investments,
+                            property, vehicles, and retirement
+                            accounts.
                         </p>
 
-                        <AssetForm onAddAsset={handleAddAsset} />
+                        <AssetForm
+                            onAddAsset={handleAddAsset}
+                        />
 
                         <div className="finance-entry-list">
                             {assets.length === 0 ? (
                                 <p className="empty-state">
-                                    No assets have been added yet.
+                                    No assets have been added
+                                    yet.
                                 </p>
                             ) : (
                                 assets.map((asset) => (
@@ -88,20 +157,29 @@ function NetWorthPage() {
                                         key={asset.id}
                                     >
                                         <div>
-                                            <h3>{asset.name}</h3>
-                                            <p>{asset.category}</p>
+                                            <h3>
+                                                {asset.name}
+                                            </h3>
+
+                                            <p>
+                                                {asset.category}
+                                            </p>
                                         </div>
 
                                         <div className="entry-actions">
                                             <strong>
-                                                {formatCurrency(asset.value)}
+                                                {formatCurrency(
+                                                    asset.value
+                                                )}
                                             </strong>
 
                                             <button
                                                 className="delete-entry-button"
                                                 type="button"
                                                 onClick={() =>
-                                                    handleDeleteAsset(asset.id)
+                                                    handleDeleteAsset(
+                                                        asset.id
+                                                    )
                                                 }
                                                 aria-label={`Delete ${asset.name}`}
                                             >
@@ -115,7 +193,12 @@ function NetWorthPage() {
 
                         <div className="card-total">
                             <span>Total Assets</span>
-                            <strong>{formatCurrency(totalAssets)}</strong>
+
+                            <strong>
+                                {formatCurrency(
+                                    totalAssets
+                                )}
+                            </strong>
                         </div>
                     </section>
 
@@ -123,73 +206,104 @@ function NetWorthPage() {
                         <h2>Liabilities</h2>
 
                         <p>
-                            Record the money you owe, including credit cards, student
-                            loans, vehicle loans, mortgages, and personal loans.
+                            Record the money you owe,
+                            including credit cards, student
+                            loans, vehicle loans, mortgages,
+                            and personal loans.
                         </p>
 
                         <LiabilityForm
-                            onAddLiability={handleAddLiability}
+                            onAddLiability={
+                                handleAddLiability
+                            }
                         />
 
                         <div className="finance-entry-list">
                             {liabilities.length === 0 ? (
                                 <p className="empty-state">
-                                    No liabilities have been added yet.
+                                    No liabilities have been
+                                    added yet.
                                 </p>
                             ) : (
-                                liabilities.map((liability) => (
-                                    <div
-                                        className="finance-entry"
-                                        key={liability.id}
-                                    >
-                                        <div>
-                                            <h3>{liability.name}</h3>
-                                            <p>{liability.category}</p>
-                                        </div>
+                                liabilities.map(
+                                    (liability) => (
+                                        <div
+                                            className="finance-entry"
+                                            key={
+                                                liability.id
+                                            }
+                                        >
+                                            <div>
+                                                <h3>
+                                                    {
+                                                        liability.name
+                                                    }
+                                                </h3>
 
-                                        <div className="entry-actions">
-                                            <strong>
-                                                {formatCurrency(
-                                                    liability.value
-                                                )}
-                                            </strong>
+                                                <p>
+                                                    {
+                                                        liability.category
+                                                    }
+                                                </p>
+                                            </div>
 
-                                            <button
-                                                className="delete-entry-button"
-                                                type="button"
-                                                onClick={() =>
-                                                    handleDeleteLiability(
-                                                        liability.id
-                                                    )
-                                                }
-                                                aria-label={`Delete ${liability.name}`}
-                                            >
-                                                Delete
-                                            </button>
+                                            <div className="entry-actions">
+                                                <strong>
+                                                    {formatCurrency(
+                                                        liability.value
+                                                    )}
+                                                </strong>
+
+                                                <button
+                                                    className="delete-entry-button"
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleDeleteLiability(
+                                                            liability.id
+                                                        )
+                                                    }
+                                                    aria-label={`Delete ${liability.name}`}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))
+                                    )
+                                )
                             )}
                         </div>
 
                         <div className="card-total">
-                            <span>Total Liabilities</span>
+                            <span>
+                                Total Liabilities
+                            </span>
+
                             <strong>
-                                {formatCurrency(totalLiabilities)}
+                                {formatCurrency(
+                                    totalLiabilities
+                                )}
                             </strong>
                         </div>
                     </section>
 
                     <section className="calculator-card summary-card">
-                        <p className="summary-label">Current Net Worth</p>
+                        <p className="summary-label">
+                            Current Net Worth
+                        </p>
 
                         <p className="summary-value">
-                            {formatCurrency(currentNetWorth)}
+                            {formatCurrency(
+                                currentNetWorth
+                            )}
                         </p>
 
                         <p className="summary-formula">
-                            {formatCurrency(totalAssets)} in assets minus{" "}
-                            {formatCurrency(totalLiabilities)} in liabilities
+                            {formatCurrency(totalAssets)} in
+                            assets minus{" "}
+                            {formatCurrency(
+                                totalLiabilities
+                            )}{" "}
+                            in liabilities
                         </p>
                     </section>
                 </div>
