@@ -1,3 +1,4 @@
+
 import {
     useEffect,
     useState,
@@ -26,8 +27,12 @@ function AssetForm({
     const [category, setCategory] =
         useState<AssetCategory>("cash");
     const [value, setValue] = useState("");
+    const [errorMessage, setErrorMessage] =
+        useState("");
 
     useEffect(() => {
+        setErrorMessage("");
+
         if (editingAsset) {
             setName(editingAsset.name);
             setCategory(editingAsset.category);
@@ -35,15 +40,14 @@ function AssetForm({
             return;
         }
 
-        setName("");
-        setCategory("cash");
-        setValue("");
+        resetForm();
     }, [editingAsset]);
 
     function resetForm() {
         setName("");
         setCategory("cash");
         setValue("");
+        setErrorMessage("");
     }
 
     function handleSubmit(
@@ -51,16 +55,36 @@ function AssetForm({
     ) {
         event.preventDefault();
 
+        const trimmedName = name.trim();
         const numericValue = Number(value);
 
-        if (!name.trim() || numericValue <= 0) {
+        if (!trimmedName) {
+            setErrorMessage(
+                "Enter a name for this asset."
+            );
             return;
         }
+
+        if (!value || Number.isNaN(numericValue)) {
+            setErrorMessage(
+                "Enter a valid value for this asset."
+            );
+            return;
+        }
+
+        if (numericValue <= 0) {
+            setErrorMessage(
+                "The asset value must be greater than zero."
+            );
+            return;
+        }
+
+        setErrorMessage("");
 
         if (editingAsset) {
             onUpdateAsset({
                 ...editingAsset,
-                name: name.trim(),
+                name: trimmedName,
                 category,
                 value: numericValue,
             });
@@ -71,7 +95,7 @@ function AssetForm({
 
         const newAsset: Asset = {
             id: crypto.randomUUID(),
-            name: name.trim(),
+            name: trimmedName,
             category,
             value: numericValue,
         };
@@ -89,6 +113,7 @@ function AssetForm({
         <form
             className="finance-form"
             onSubmit={handleSubmit}
+            noValidate
         >
             <div className="form-field">
                 <label htmlFor="asset-name">
@@ -99,10 +124,19 @@ function AssetForm({
                     id="asset-name"
                     type="text"
                     value={name}
-                    onChange={(event) =>
-                        setName(event.target.value)
-                    }
+                    onChange={(event) => {
+                        setName(event.target.value);
+                        setErrorMessage("");
+                    }}
                     placeholder="Savings account"
+                    aria-describedby={
+                        errorMessage
+                            ? "asset-form-error"
+                            : undefined
+                    }
+                    aria-invalid={
+                        errorMessage ? "true" : "false"
+                    }
                 />
             </div>
 
@@ -158,12 +192,31 @@ function AssetForm({
                     min="0"
                     step="0.01"
                     value={value}
-                    onChange={(event) =>
-                        setValue(event.target.value)
-                    }
+                    onChange={(event) => {
+                        setValue(event.target.value);
+                        setErrorMessage("");
+                    }}
                     placeholder="0.00"
+                    aria-describedby={
+                        errorMessage
+                            ? "asset-form-error"
+                            : undefined
+                    }
+                    aria-invalid={
+                        errorMessage ? "true" : "false"
+                    }
                 />
             </div>
+
+            {errorMessage && (
+                <p
+                    id="asset-form-error"
+                    className="form-error-message"
+                    role="alert"
+                >
+                    {errorMessage}
+                </p>
+            )}
 
             <button
                 className="form-submit-button"
