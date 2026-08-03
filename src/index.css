@@ -822,3 +822,111 @@ main {
   box-shadow:
     0 0 0 3px rgba(217, 45, 32, 0.1);
 }
+
+/* =========================================================
+   FINANCIAL SUMMARY CARDS - (NET WORTH CALCULATOR)
+========================================================= */
+
+.financial-summary-grid {
+  width: 100%;
+  margin-bottom: 2rem;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.financial-summary-card {
+  min-width: 0;
+  padding: 1.35rem;
+
+  background:
+    linear-gradient(145deg,
+      rgba(255, 255, 255, 0.94),
+      rgba(247, 247, 249, 0.88));
+
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 22px;
+
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.045);
+
+  text-align: left;
+}
+
+.financial-summary-label {
+  margin: 0 0 0.7rem;
+
+  color: #6e6e73;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.financial-summary-amount {
+  margin: 0;
+
+  color: #1d1d1f;
+
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  font-weight: 750;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
+}
+
+.financial-summary-detail {
+  margin: 0.65rem 0 0;
+
+  color: #6e6e73;
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.net-worth-summary-card {
+  background:
+    linear-gradient(145deg,
+      #1e2733,
+      #111821);
+}
+
+.net-worth-summary-card .financial-summary-label,
+.net-worth-summary-card .financial-summary-detail {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.net-worth-summary-card .financial-summary-amount {
+  color: #ffffff;
+}
+
+.positive-net-worth .financial-summary-amount {
+  color: #ffffff;
+}
+
+.negative-net-worth .financial-summary-amount {
+  color: #ffb4ab;
+}
+
+@media (max-width: 1000px) {
+  .financial-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .financial-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .financial-summary-card {
+    padding: 1.15rem;
+    border-radius: 18px;
+  }
+}

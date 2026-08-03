@@ -177,6 +177,9 @@ function NetWorthPage() {
     const currentNetWorth =
         totalAssets - totalLiabilities;
 
+    const totalEntries =
+        assets.length + liabilities.length;
+
     function formatCurrency(amount: number) {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -203,6 +206,91 @@ function NetWorthPage() {
                         financial health.
                     </p>
                 </header>
+
+                <section
+                    className="financial-summary-grid"
+                    aria-label="Financial summary"
+                >
+                    <article className="financial-summary-card">
+                        <p className="financial-summary-label">
+                            Total Assets
+                        </p>
+
+                        <p className="financial-summary-amount">
+                            {formatCurrency(totalAssets)}
+                        </p>
+
+                        <p className="financial-summary-detail">
+                            {assets.length}{" "}
+                            {assets.length === 1
+                                ? "asset"
+                                : "assets"}
+                        </p>
+                    </article>
+
+                    <article className="financial-summary-card">
+                        <p className="financial-summary-label">
+                            Total Liabilities
+                        </p>
+
+                        <p className="financial-summary-amount">
+                            {formatCurrency(
+                                totalLiabilities
+                            )}
+                        </p>
+
+                        <p className="financial-summary-detail">
+                            {liabilities.length}{" "}
+                            {liabilities.length === 1
+                                ? "liability"
+                                : "liabilities"}
+                        </p>
+                    </article>
+
+                    <article
+                        className={`financial-summary-card net-worth-summary-card ${
+                            currentNetWorth < 0
+                                ? "negative-net-worth"
+                                : "positive-net-worth"
+                        }`}
+                    >
+                        <p className="financial-summary-label">
+                            Current Net Worth
+                        </p>
+
+                        <p className="financial-summary-amount">
+                            {formatCurrency(
+                                currentNetWorth
+                            )}
+                        </p>
+
+                        <p className="financial-summary-detail">
+                            Assets minus liabilities
+                        </p>
+                    </article>
+
+                    <article className="financial-summary-card">
+                        <p className="financial-summary-label">
+                            Financial Entries
+                        </p>
+
+                        <p className="financial-summary-amount">
+                            {totalEntries}
+                        </p>
+
+                        <p className="financial-summary-detail">
+                            {assets.length}{" "}
+                            {assets.length === 1
+                                ? "asset"
+                                : "assets"}
+                            {" • "}
+                            {liabilities.length}{" "}
+                            {liabilities.length === 1
+                                ? "liability"
+                                : "liabilities"}
+                        </p>
+                    </article>
+                </section>
 
                 <div className="calculator-grid">
                     <section className="calculator-card">
