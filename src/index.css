@@ -930,3 +930,31 @@ main {
     border-radius: 18px;
   }
 }
+
+/* =========================================================
+   ACCESSIBILITY — KEYBOARD FOCUS (NET WORTH CALCULATOR)
+========================================================= */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #0071e3;
+  outline-offset: 3px;
+}
+
+.delete-entry-button:focus-visible {
+  outline-color: #d92d20;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
