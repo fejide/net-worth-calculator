@@ -38,6 +38,7 @@ function loadLiabilities(): Liability[] {
 
 function NetWorthPage() {
     const [assets, setAssets] = useState<Asset[]>(loadAssets);
+
     const [liabilities, setLiabilities] =
         useState<Liability[]>(loadLiabilities);
 
@@ -120,6 +121,14 @@ function NetWorthPage() {
     }
 
     function handleDeleteAsset(assetId: string) {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this asset?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
         setAssets((currentAssets) =>
             currentAssets.filter(
                 (asset) => asset.id !== assetId
@@ -134,6 +143,14 @@ function NetWorthPage() {
     function handleDeleteLiability(
         liabilityId: string
     ) {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this liability?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
         setLiabilities((currentLiabilities) =>
             currentLiabilities.filter(
                 (liability) =>
