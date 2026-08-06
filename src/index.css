@@ -958,3 +958,88 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* =========================================================
+   BUDGET AND CALCULATOR TABLET RESPONSIVENESS - (BUDGET PAGE)
+========================================================= */
+
+@media (max-width: 900px) {
+  .calculator-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calculator-card,
+  .summary-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .summary-card {
+    grid-column: 1;
+  }
+
+  .finance-entry {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .entry-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .entry-actions strong {
+    margin-right: auto;
+  }
+
+  .card-total {
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .card-total span,
+  .card-total strong {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .calculator-card {
+    padding: 1.35rem;
+  }
+
+  .finance-entry {
+    padding: 1rem;
+  }
+
+  .entry-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .entry-actions strong {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  .edit-entry-button,
+  .delete-entry-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .card-total {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .card-total strong {
+    font-size: 1.2rem;
+  }
+}
